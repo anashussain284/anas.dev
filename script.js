@@ -188,7 +188,7 @@ function renderHome() {
 
                     <div class="glass-card p-8">
                         <h3 class="text-xl font-bold mb-4 text-center">Project Inquiry</h3>
-                        <form action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" class="space-y-4">
+                        <form action="https://formspree.io/f/mvzbkrbq" method="POST" class="space-y-4">
                             <input type="text" name="name" placeholder="YOUR NAME" required
                                 class="w-full bg-white/5 border border-amber-500/20 p-3 rounded-lg text-sm outline-none focus:border-amber-500 text-white transition">
                             
