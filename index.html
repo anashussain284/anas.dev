@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anas Hussain | Web Development Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+</head>
+<body>
+    <canvas id="networkCanvas"></canvas>
+
+    <nav class="nav-container">
+        <div class="nav-glass">
+            <span onclick="navigate('home')">Home</span>
+            <span onclick="scrollToSection('solutions')">Solutions</span>
+            <span onclick="scrollToSection('works')">Portfolio</span>
+            <span onclick="navigate('blog-list')">Articles</span>
+            <span onclick="scrollToSection('contact')">Let's Talk</span>
+        </div>
+    </nav>
+
+    <main id="app-root"></main>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
