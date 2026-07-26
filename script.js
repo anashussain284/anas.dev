@@ -51,30 +51,43 @@ let blogPageState = {
 async function fetchDevToArticles() {
     if (fetchedArticles.length > 0) return fetchedArticles;
     try {
-        const response = await fetch(`https://dev.to/api/articles?username=${portfolioData.devToUsername}`);
+        const response = await fetch(`https://dev.to/api/articles?username=${portfolioData.devToUsername}&per_page=1000`);
         if (!response.ok) throw new Error('Network error');
         const data = await response.json();
+        
         if (data && data.length > 0) {
-            fetchedArticles = data.map(article => ({
-                id: article.id,
-                date: new Date(article.published_at).toLocaleDateString('en-US', { day: '2-digit', month: 'SHORT', year: 'numeric' }).toUpperCase(),
-                title: article.title,
-                description: article.description,
-                url: article.canonical_url || article.url,
-                reading_time_minutes: article.reading_time_minutes,
-                cover_image: article.cover_image || article.social_image,
-                tags: article.tag_list || ['php', 'laravel', 'backend'] // Defaults if none from API
-            }));
+            fetchedArticles = data.map(article => {
+                // Ensure tags are always an array of lowercase strings
+                let articleTags = [];
+                if (Array.isArray(article.tag_list) && article.tag_list.length > 0) {
+                    articleTags = article.tag_list;
+                } else if (typeof article.tags === 'string' && article.tags.length > 0) {
+                    articleTags = article.tags.split(',').map(t => t.trim());
+                } else {
+                    articleTags = ['php', 'laravel']; // Default fallback
+                }
+
+                return {
+                    id: article.id,
+                    date: new Date(article.published_at).toLocaleDateString('en-US', { day: '2-digit', month: 'SHORT', year: 'numeric' }).toUpperCase(),
+                    title: article.title,
+                    description: article.description,
+                    url: article.canonical_url || article.url,
+                    reading_time_minutes: article.reading_time_minutes,
+                    cover_image: article.cover_image || article.social_image,
+                    tags: articleTags.map(t => t.toLowerCase())
+                };
+            });
             return fetchedArticles;
         }
     } catch (error) {
         console.warn("Dev.to API offline, using static data:", error);
     }
-    
-    // Fallback static data enriched with tags for testing
+
+    // Fallback to static blogs array
     fetchedArticles = portfolioData.blogs.map(b => ({
         ...b,
-        tags: b.tags || ['laravel', 'php', 'oop']
+        tags: (b.tags || []).map(t => t.toLowerCase())
     }));
     return fetchedArticles;
 }

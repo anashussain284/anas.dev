@@ -120,7 +120,26 @@ const portfolioData = {
             title: "Minimalism in Code & Clean Laravel Patterns", 
             reading_time_minutes: 3,
             url: "https://dev.to/anashussain284",
-            description: "Why stripping away unnecessary abstractions leads to maintainable enterprise software."
+            description: "Why stripping away unnecessary abstractions leads to maintainable enterprise software.",
+            tags: ["php", "laravel", "oop", "architecture"] // <--- Added tags
+        },
+        { 
+            id: 2, 
+            date: "20 JAN 2026", 
+            title: "Optimizing MySQL Queries for High Throughput", 
+            reading_time_minutes: 5,
+            url: "https://dev.to/anashussain284",
+            description: "Indexing strategies and query tuning techniques for backend developers.",
+            tags: ["mysql", "database", "backend", "performance"]
+        },
+        { 
+            id: 3, 
+            date: "05 JAN 2026", 
+            title: "Unit Testing Laravel APIs with PHPUnit", 
+            reading_time_minutes: 4,
+            url: "https://dev.to/anashussain284",
+            description: "Writing robust unit and integration tests to ensure code quality.",
+            tags: ["unitesting", "phpunit", "laravel", "php"]
         }
     ]
 };
