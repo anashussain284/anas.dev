@@ -4,7 +4,7 @@ const portfolioData = {
     photoUrl: "anasHussain.jpg",
     resumeLink: "https://drive.google.com/file/d/1uboXIj9gRQkXungPYdAijCEF3bfHzJiR/view",
     email: "anashussain284@gmail.com",
-    devToUsername: "anashussain284", // Used for automated post fetching
+    devToUsername: "anashussain284",
     
     socials: [
         { icon: "fa-github", link: "https://github.com/anashussain284" },
@@ -92,27 +92,35 @@ const portfolioData = {
     testimonials: [
         { 
             name: "Sekhar C", 
-            text: "Anas Hussain has demonstrated exceptional skill and leadership. I've worked closely with him for 3 years and his dedication to high-quality code is unmatched." 
+            title: "Technical Lead & Engineering Manager",
+            photo: "", 
+            text: "Anas Hussain has demonstrated exceptional skill and leadership. I've worked closely with him for 3 years and his dedication to high-quality code is unmatched.",
+            linkedInUrl: "https://www.linkedin.com/in/anashussain284/details/recommendations/"
         },
         { 
-            name: "Princy Sugandh", 
-            text: "An exceptional developer with strong expertise in Laravel. He consistently delivers scalable solutions while leading engineering teams with professionalism." 
+            name: "Princy Aaghaww", 
+            title: "Leadership Facilitator & Catalyst",
+            photo: "", 
+            text: "An exceptional developer with strong expertise in Laravel. He consistently delivers scalable solutions while leading engineering teams with professionalism.",
+            linkedInUrl: "https://www.linkedin.com/in/anashussain284/details/recommendations/"
         },
         { 
             name: "Kavya Sreekanth, Ph.D", 
-            text: "Anas is self-motivated and stays ahead of tech trends. He contributed significantly to developing customer-centric features for our evolving needs." 
+            title: "Research Scientist & Tech Consultant",
+            photo: "", 
+            text: "Anas is self-motivated and stays ahead of tech trends. He contributed significantly to developing customer-centric features for our evolving needs.",
+            linkedInUrl: "https://www.linkedin.com/in/anashussain284/details/recommendations/"
         }
     ],
 
-    // Fallback static data if network fails or Dev.to API is unreachable
     blogs: [
         { 
             id: 1, 
             date: "12 FEB 2026", 
-            title: "How to Build More Flexible Systems.", 
+            title: "Minimalism in Code & Clean Laravel Patterns", 
             reading_time_minutes: 3,
-            url: "https://dev.to/anashussain284/the-inheritance-trap-how-laravel-developers-can-build-more-flexible-systems-3nme",
-            description: "The Inheritance Trap: How Laravel Developers Can Build More Flexible Systems."
+            url: "https://dev.to/anashussain284",
+            description: "Why stripping away unnecessary abstractions leads to maintainable enterprise software."
         }
     ]
 };

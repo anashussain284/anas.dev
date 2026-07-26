@@ -210,11 +210,11 @@ async function renderHome() {
                 </div>
             </section>
 
-            <!-- ARTICLES & ENDORSEMENTS (SPLIT SECTION WITH EQUAL HEIGHT) -->
+            <!-- ARTICLES & ENDORSEMENTS (WITH LINKEDIN VERIFICATION) -->
             <div class="grid lg:grid-cols-2 gap-8 mb-12">
                 
                 <!-- ARTICLES CARD -->
-                <div class="glass-card flex flex-col justify-between h-[480px]">
+                <div class="glass-card flex flex-col justify-between h-[520px]">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-white">Latest <span class="gradient-text">Articles</span></h2>
                         <span onclick="navigate('blog-list')" class="text-amber-500 hover:underline cursor-pointer font-bold text-xs uppercase tracking-wider">View All</span>
@@ -231,17 +231,38 @@ async function renderHome() {
                     </div>
                 </div>
 
-                <!-- TESTIMONIALS CARD -->
-                <div class="glass-card flex flex-col justify-between h-[480px]">
-                    <h2 class="text-2xl font-bold text-white mb-6">Peer <span class="gradient-text">Endorsements</span></h2>
+                <!-- TESTIMONIALS CARD WITH LINKEDIN VERIFICATION LINK -->
+                <div class="glass-card flex flex-col justify-between h-[520px]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">Peer <span class="gradient-text">Endorsements</span></h2>
+                        <span class="text-xs text-slate-400 flex items-center gap-1 font-medium">
+                            <i class="fas fa-shield-alt text-amber-500"></i> LinkedIn Verified
+                        </span>
+                    </div>
+                    
                     <div class="scroll-container custom-scroll overflow-y-auto flex-1 pr-2">
-                        <div class="space-y-4">
+                        <div class="space-y-5">
                             ${portfolioData.testimonials.map(t => `
-                                <div class="p-5 bg-slate-900/60 rounded-xl border-l-4 border-l-amber-500 border border-white/5">
-                                    <p class="text-slate-300 text-sm italic mb-4 leading-relaxed">"${t.text}"</p>
-                                    <div class="flex items-center gap-3">
-                                        <div class="h-8 w-8 bg-amber-500 rounded-full flex items-center justify-center font-bold text-black text-xs">${t.name.charAt(0)}</div>
-                                        <span class="text-sm font-bold text-white">${t.name}</span>
+                                <div class="p-5 bg-slate-900/60 rounded-xl border-l-4 border-l-amber-500 border border-white/5 flex flex-col justify-between gap-4">
+                                    <p class="text-slate-300 text-sm italic leading-relaxed">"${t.text}"</p>
+                                    
+                                    <div class="flex items-center justify-between pt-2 border-t border-white/5">
+                                        <div class="flex items-center gap-3">
+                                            ${t.photo ? 
+                                                `<img src="${t.photo}" alt="${t.name}" class="h-9 w-9 rounded-full object-cover border border-amber-500/50">` : 
+                                                `<div class="h-9 w-9 bg-amber-500 rounded-full flex items-center justify-center font-bold text-black text-xs shrink-0">${t.name.charAt(0)}</div>`
+                                            }
+                                            <div>
+                                                <h4 class="text-sm font-bold text-white flex items-center gap-1.5 leading-none mb-1">
+                                                    ${t.name}
+                                                </h4>
+                                                <p class="text-[11px] text-slate-400">${t.title}</p>
+                                            </div>
+                                        </div>
+
+                                        <a href="${t.linkedInUrl}" target="_blank" class="px-3 py-1.5 rounded-lg bg-sky-950/50 border border-sky-500/30 text-sky-400 hover:bg-sky-500 hover:text-white transition text-[11px] font-semibold flex items-center gap-1.5 shrink-0">
+                                            <i class="fab fa-linkedin text-xs"></i> Verify
+                                        </a>
                                     </div>
                                 </div>
                             `).join('')}
