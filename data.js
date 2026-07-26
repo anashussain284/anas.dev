@@ -121,7 +121,7 @@ const portfolioData = {
             reading_time_minutes: 3,
             url: "https://dev.to/anashussain284",
             description: "Why stripping away unnecessary abstractions leads to maintainable enterprise software.",
-            tags: ["php", "laravel", "oop", "architecture"] // <--- Added tags
+            tags: ["php", "laravel", "oop", "architecture"]
         },
         { 
             id: 2, 
@@ -134,7 +134,7 @@ const portfolioData = {
         },
         { 
             id: 3, 
-            date: "05 JAN 2026", 
+            date: "05 JAN 2027", 
             title: "Unit Testing Laravel APIs with PHPUnit", 
             reading_time_minutes: 4,
             url: "https://dev.to/anashussain284",

@@ -52,7 +52,7 @@ window.articleState = {
     selectedTag: "all"
 };
 
-// Fetch Dev.to Articles with Fallback & Tag Parsing
+// Fetch Dev.to Articles with Fallback, Tag Parsing & ID Descending Sorting
 async function fetchDevToArticles() {
     if (fetchedArticles.length > 0) return fetchedArticles;
 
@@ -75,7 +75,7 @@ async function fetchDevToArticles() {
                 }
 
                 return {
-                    id: article.id,
+                    id: Number(article.id),
                     date: new Date(article.published_at).toLocaleDateString('en-US', { day: '2-digit', month: 'SHORT', year: 'numeric' }).toUpperCase(),
                     title: article.title || "Untitled Article",
                     description: article.description || "",
@@ -85,17 +85,21 @@ async function fetchDevToArticles() {
                     tags: rawTags.map(t => t.toLowerCase().trim())
                 };
             });
+
+            // Sort descending by ID (newest/highest ID first)
+            fetchedArticles.sort((a, b) => b.id - a.id);
             return fetchedArticles;
         }
     } catch (error) {
         console.warn("Dev.to API offline. Using fallback blogs array:", error);
     }
 
-    // Fallback using portfolioData.blogs
+    // Fallback using portfolioData.blogs sorted DESC by ID
     fetchedArticles = (portfolioData.blogs || []).map(b => ({
         ...b,
+        id: Number(b.id),
         tags: Array.isArray(b.tags) ? b.tags.map(t => t.toLowerCase().trim()) : ['php', 'laravel']
-    }));
+    })).sort((a, b) => b.id - a.id);
 
     return fetchedArticles;
 }
@@ -171,6 +175,8 @@ function renderFooter() {
 // HOME PAGE VIEW
 async function renderHome() {
     const articles = await fetchDevToArticles();
+    
+    // Pick the top 4 latest articles (already sorted DESC by ID)
     const homeArticles = articles.slice(0, 4);
 
     app.innerHTML = `
@@ -326,6 +332,7 @@ function filterArticles() {
     const query = window.articleState.searchQuery.toLowerCase().trim();
     const selectedTag = window.articleState.selectedTag.toLowerCase();
 
+    // Filter matching articles while maintaining ID descending order
     return fetchedArticles.filter(article => {
         const matchesQuery = !query || 
             article.title.toLowerCase().includes(query) || 
@@ -502,7 +509,7 @@ async function renderBlogList() {
                 `).join('')}
             </div>
 
-            <!-- ARTICLES GRID (3 ROWS MAX = 9 ITEMS) -->
+            <!-- ARTICLES GRID (SORTED DESCENDING BY ID) -->
             <div id="articles-grid-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
 
             <!-- PAGINATION -->
