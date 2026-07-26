@@ -116,30 +116,165 @@ const portfolioData = {
     blogs: [
         { 
             id: 1, 
-            date: "12 FEB 2026", 
-            title: "Minimalism in Code & Clean Laravel Patterns", 
+            date: "11 Dec 2024", 
+            title: "Laravel Data Encryption and Decryption", 
             reading_time_minutes: 3,
-            url: "https://dev.to/anashussain284",
-            description: "Why stripping away unnecessary abstractions leads to maintainable enterprise software.",
-            tags: ["php", "laravel", "oop", "architecture"]
+            url: "https://dev.to/anashussain284/data-encryption-and-decryption-in-laravel-58bf",
+            description: "This guide explains how to implement encryption and decryption for sensitive data in Laravel models",
+            tags: ["laravel", "security"]
         },
         { 
             id: 2, 
-            date: "20 JAN 2026", 
-            title: "Optimizing MySQL Queries for High Throughput", 
-            reading_time_minutes: 5,
-            url: "https://dev.to/anashussain284",
-            description: "Indexing strategies and query tuning techniques for backend developers.",
-            tags: ["mysql", "database", "backend", "performance"]
+            date: "17 Dec 2024", 
+            title: "Laravel Migrations", 
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/laravel-migrations-2nab",
+            description: "This guide explains how to create tablse use laravel migration",
+            tags: ["laravel", "database"]
         },
         { 
             id: 3, 
-            date: "05 JAN 2027", 
-            title: "Unit Testing Laravel APIs with PHPUnit", 
-            reading_time_minutes: 4,
-            url: "https://dev.to/anashussain284",
-            description: "Writing robust unit and integration tests to ensure code quality.",
-            tags: ["unitesting", "phpunit", "laravel", "php"]
+            date: "17 Dec 2024", 
+            title: "Laravel Factory and Seeder", 
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/laravel-factory-and-seeder-implementation-12k1",
+            description: "This guide explains how to use laravel factory and seeder to seed database",
+            tags: ["laravel", "database"]
+        },
+        { 
+            id: 4, 
+            date: "20 Dec 2024", 
+            title: "Laravel Request Validation", 
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/laravel-request-validation-3895",
+            description: "This guide explains how to use laravel request validation",
+            tags: ["laravel"]
+        },
+        { 
+            id: 5, 
+            date: "21 Dec 2024", 
+            title: "Laravel Centralized Exception Handling", 
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/laravel-centralized-exception-handling-53f3",
+            description: "This guide explains how to use laravel centralized exception handling",
+            tags: ["laravel"]
+        },
+        { 
+            id: 6, 
+            date: "28 Dec 2024", 
+            title: "Laravel Envoy", 
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/automate-your-laravel-deployments-with-envoy-4fk0",
+            description: "This guide explains how to use laravel envoy for zero downtime deployment",
+            tags: ["laravel","package"]
+        },
+        { 
+            id: 7, 
+            date: "2 Jan 2025", 
+            title: "Laravel Passport", 
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/automate-your-laravel-deployments-with-envoy-4fk0",
+            description: "This guide explains how to use laravel passport for authentication step by step guide",
+            tags: ["laravel","package","authentication"]
+        },
+        { 
+            id: 8, 
+            date: "15 Jan 2025", 
+            title: "Laravel Docker Setup", 
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/laravel-application-setup-with-docker-a-step-by-step-guide-2ok0",
+            description: "This guide explains how to setup docker for laravel application run, step by step guide",
+            tags: ["laravel","docker"]
+        },
+        { 
+            id: 9, 
+            date: "2 Jul 2026", 
+            title: "Single Responsibility Principle",
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/single-responsibility-principle-srp-15hd",
+            description: "Explain single responsibility principle",
+            tags: ["php","solid","design-principle","oop"]
+        },
+        { 
+            id: 10, 
+            date: "2 Jul 2026", 
+            title: "Open Closed Principle",
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/open-closed-principle-ocp-290l",
+            description: "Explain open closed principle",
+            tags: ["php","solid","design-principle","oop"]
+        },
+        { 
+            id: 11, 
+            date: "4 Jul 2026", 
+            title: "Liskov Substitution Principle",
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/liskov-substitution-principle-lsp-46ja",
+            description: "Explain liskov substitution principle",
+            tags: ["php","solid","design-principle","oop"]
+        },
+        { 
+            id: 12, 
+            date: "6 Jul 2026", 
+            title: "Interface Segregation Principle",
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/interface-segregation-principle-isp-54bo",
+            description: "Explain interface segregation principle",
+            tags: ["php","solid","design-principle","oop"]
+        },
+        { 
+            id: 13, 
+            date: "8 Jul 2026", 
+            title: "Dependency Inversion Principle",
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/dependency-inversion-principle-dip-l9i",
+            description: "Explain dependency inversion principle",
+            tags: ["php","solid","design-principle","oop"]
+        },
+        { 
+            id: 14, 
+            date: "14 Jul 2026", 
+            title: "Dependency Injection",
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/why-laravels-service-container-feels-like-magic-dependency-injection-explained-23fm",
+            description: "Why Laravel's Service Container Feels Like Magic: Dependency Injection Explained",
+            tags: ["php","design-pattern","object-design-fundamentals","oop"]
+        },
+        { 
+            id: 15, 
+            date: "17 Jul 2026", 
+            title: "Inversion of Control",
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/from-procedural-to-pro-mastering-inversion-of-control-in-laravel-11np",
+            description: "From Procedural to Pro: Mastering Inversion of Control in Laravel",
+            tags: ["php","design-pattern","object-design-fundamentals","oop"]
+        },
+        { 
+            id: 16, 
+            date: "20 Jul 2026", 
+            title: "Inheritance",
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/the-inheritance-trap-how-laravel-developers-can-build-more-flexible-systems-3nme",
+            description: "The Inheritance Trap: How Laravel Developers Can Build More Flexible Systems",
+            tags: ["php","design-pattern","object-design-fundamentals","oop"]
+        },
+        { 
+            id: 17, 
+            date: "23 Jul 2026", 
+            title: "Encapsulation",
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/from-data-dump-to-domain-model-encapsulation-in-php-8-koe",
+            description: "From Data Dump to Domain Model: Encapsulation in PHP 8",
+            tags: ["php","design-pattern","object-design-fundamentals","oop"]
+        },
+        { 
+            id: 18, 
+            date: "26 Jul 2026", 
+            title: "Polymorphism",
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/kill-your-conditionals-mastering-polymorphism-in-php-laravel-2el0",
+            description: "Kill Your Conditionals: Mastering Polymorphism in PHP & Laravel",
+            tags: ["php","design-pattern","object-design-fundamentals","oop"]
         }
     ]
 };
