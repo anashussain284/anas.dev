@@ -526,3 +526,4 @@ async function renderBlogList() {
 
 // INITIAL STARTUP
 window.navigate('home');
+
