@@ -40,6 +40,14 @@ initCanvas(); animateBackground();
 const app = document.getElementById('app-root');
 let fetchedArticles = [];
 
+// ARTICLES PAGE STATE MANAGEMENT
+let blogPageState = {
+    searchQuery: '',
+    selectedTag: 'ALL',
+    currentPage: 1,
+    itemsPerPage: 9
+};
+
 async function fetchDevToArticles() {
     if (fetchedArticles.length > 0) return fetchedArticles;
     try {
@@ -54,21 +62,32 @@ async function fetchDevToArticles() {
                 description: article.description,
                 url: article.canonical_url || article.url,
                 reading_time_minutes: article.reading_time_minutes,
-                cover_image: article.cover_image || article.social_image
+                cover_image: article.cover_image || article.social_image,
+                tags: article.tag_list || ['php', 'laravel', 'backend'] // Defaults if none from API
             }));
             return fetchedArticles;
         }
     } catch (error) {
         console.warn("Dev.to API offline, using static data:", error);
     }
-    return portfolioData.blogs;
+    
+    // Fallback static data enriched with tags for testing
+    fetchedArticles = portfolioData.blogs.map(b => ({
+        ...b,
+        tags: b.tags || ['laravel', 'php', 'oop']
+    }));
+    return fetchedArticles;
 }
 
 function navigate(page) {
     app.style.opacity = '0';
     setTimeout(async () => {
         if (page === 'home') await renderHome();
-        else if (page === 'blog-list') await renderBlogList();
+        else if (page === 'blog-list') {
+            // Reset page state on navigation
+            blogPageState = { searchQuery: '', selectedTag: 'ALL', currentPage: 1, itemsPerPage: 9 };
+            await renderBlogList();
+        }
         app.style.opacity = '1';
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 200);
@@ -210,7 +229,7 @@ async function renderHome() {
                 </div>
             </section>
 
-            <!-- ARTICLES & ENDORSEMENTS (WITH LINKEDIN VERIFICATION) -->
+            <!-- ARTICLES & ENDORSEMENTS -->
             <div class="grid lg:grid-cols-2 gap-8 mb-12">
                 
                 <!-- ARTICLES CARD -->
@@ -278,41 +297,199 @@ async function renderHome() {
     `;
 }
 
-// DEDICATED ARTICLES GRID PAGE
+// ADVANCED ARTICLES PAGE WITH DYNAMIC SEARCH, TAG FILTERING & PAGINATION
 async function renderBlogList() {
-    const articles = await fetchDevToArticles();
+    const allArticles = await fetchDevToArticles();
 
+    // 1. Extract Unique Tags
+    const tagsSet = new Set(['ALL']);
+    allArticles.forEach(art => {
+        if (art.tags && Array.isArray(art.tags)) {
+            art.tags.forEach(tag => tagsSet.add(tag.toLowerCase()));
+        }
+    });
+    const uniqueTags = Array.from(tagsSet);
+
+    // 2. Filter Articles by Search Query and Tag Selection
+    const filteredArticles = allArticles.filter(art => {
+        const matchesQuery = 
+            art.title.toLowerCase().includes(blogPageState.searchQuery.toLowerCase()) || 
+            (art.description && art.description.toLowerCase().includes(blogPageState.searchQuery.toLowerCase()));
+
+        const matchesTag = 
+            blogPageState.selectedTag === 'ALL' || 
+            (art.tags && art.tags.map(t => t.toLowerCase()).includes(blogPageState.selectedTag.toLowerCase()));
+
+        return matchesQuery && matchesTag;
+    });
+
+    // 3. Paginate Filtered Articles (9 per page)
+    const totalPages = Math.ceil(filteredArticles.length / blogPageState.itemsPerPage) || 1;
+    
+    // Safety check for current page boundary
+    if (blogPageState.currentPage > totalPages) blogPageState.currentPage = totalPages;
+
+    const startIndex = (blogPageState.currentPage - 1) * blogPageState.itemsPerPage;
+    const paginatedArticles = filteredArticles.slice(startIndex, startIndex + blogPageState.itemsPerPage);
+
+    // 4. Render Main HTML Layout
     app.innerHTML = `
-        <div class="max-w-6xl mx-auto px-6 min-h-[70vh]">
-            <div class="flex justify-between items-center mb-10">
+        <div class="max-w-6xl mx-auto px-6 min-h-[75vh]">
+            <!-- HEADER -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                 <div>
                     <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2">Technical <span class="gradient-text">Writing</span></h1>
-                    <p class="text-slate-400 text-sm">Deep dives into Laravel core concepts, database optimizations, and system design.</p>
+                    <p class="text-slate-400 text-sm">Deep dives into Laravel, backend architecture, database optimizations, and system design.</p>
                 </div>
-                <span onclick="navigate('home')" class="text-amber-500 cursor-pointer font-bold uppercase tracking-wider text-xs hover:underline flex items-center gap-2">
+                <span onclick="navigate('home')" class="text-amber-500 cursor-pointer font-bold uppercase tracking-wider text-xs hover:underline flex items-center gap-2 self-start md:self-auto">
                     <i class="fas fa-arrow-left"></i> Back to Home
                 </span>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                ${articles.map(b => `
-                    <a href="${b.url}" target="_blank" class="glass-card flex flex-col justify-between cursor-pointer group hover:border-amber-500/50 transition">
-                        <div>
-                            ${b.cover_image ? `<img src="${b.cover_image}" alt="Cover Image" class="w-full h-36 object-cover rounded-lg mb-4 border border-white/5">` : ''}
-                            <span class="text-amber-500 text-[11px] font-bold uppercase tracking-wider block mb-2">${b.date} • ${b.reading_time_minutes || 3} min read</span>
-                            <h2 class="text-lg font-bold text-white mb-2 group-hover:text-amber-500 transition leading-snug">${b.title}</h2>
-                            ${b.description ? `<p class="text-slate-400 text-xs line-clamp-3 mb-4 leading-relaxed">${b.description}</p>` : ''}
-                        </div>
-                        <div class="text-amber-500 text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 mt-2">
-                            Read on Dev.to <i class="fas fa-external-link-alt text-[10px]"></i>
-                        </div>
-                    </a>
-                `).join('')}
+            <!-- SEARCH AND TAG FILTER CONTROLS -->
+            <div class="space-y-5 mb-10">
+                <!-- Search Input -->
+                <div class="relative max-w-xl">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input 
+                        type="text" 
+                        id="articleSearchInput"
+                        placeholder="Search 100+ articles by topic, keyword, or title..." 
+                        value="${blogPageState.searchQuery}"
+                        class="w-full pl-11 pr-4 py-3 bg-slate-900/80 border border-white/10 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500/50 text-sm transition"
+                    />
+                    ${blogPageState.searchQuery ? `
+                        <button onclick="updateBlogState({searchQuery: '', currentPage: 1})" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    ` : ''}
+                </div>
+
+                <!-- Tag Cloud Buttons -->
+                <div class="flex flex-wrap gap-2 items-center">
+                    <span class="text-xs text-slate-400 font-bold uppercase tracking-wider mr-1">Filter Tag:</span>
+                    ${uniqueTags.map(tag => `
+                        <button 
+                            onclick="updateBlogState({selectedTag: '${tag}', currentPage: 1})" 
+                            class="px-3 py-1 rounded-lg text-xs font-semibold capitalize transition ${
+                                blogPageState.selectedTag.toLowerCase() === tag.toLowerCase() 
+                                    ? 'bg-amber-500 text-black font-bold shadow-lg shadow-amber-500/20' 
+                                    : 'bg-slate-900/80 text-slate-400 border border-white/10 hover:border-amber-500/40 hover:text-white'
+                            }">
+                            #${tag}
+                        </button>
+                    `).join('')}
+                </div>
             </div>
+
+            <!-- ARTICLES GRID (3 ROWS x 3 COLS = 9 ITEMS) -->
+            ${paginatedArticles.length > 0 ? `
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                    ${paginatedArticles.map(b => `
+                        <a href="${b.url}" target="_blank" class="glass-card flex flex-col justify-between cursor-pointer group hover:border-amber-500/50 transition">
+                            <div>
+                                ${b.cover_image ? `<img src="${b.cover_image}" alt="Cover Image" class="w-full h-36 object-cover rounded-lg mb-4 border border-white/5">` : ''}
+                                
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-amber-500 text-[11px] font-bold uppercase tracking-wider">${b.date} • ${b.reading_time_minutes || 3} min</span>
+                                </div>
+
+                                <h2 class="text-lg font-bold text-white mb-2 group-hover:text-amber-500 transition leading-snug">${b.title}</h2>
+                                ${b.description ? `<p class="text-slate-400 text-xs line-clamp-3 mb-4 leading-relaxed">${b.description}</p>` : ''}
+                            </div>
+
+                            <div>
+                                <!-- Tags List -->
+                                <div class="flex flex-wrap gap-1.5 mb-4">
+                                    ${(b.tags || []).map(t => `
+                                        <span class="text-[10px] bg-slate-950/80 text-slate-400 border border-white/5 px-2 py-0.5 rounded">#${t}</span>
+                                    `).join('')}
+                                </div>
+
+                                <div class="text-amber-500 text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 pt-2 border-t border-white/5">
+                                    Read Article <i class="fas fa-external-link-alt text-[10px]"></i>
+                                </div>
+                            </div>
+                        </a>
+                    `).join('')}
+                </div>
+            ` : `
+                <!-- EMPTY STATE -->
+                <div class="text-center py-16 bg-slate-900/40 rounded-2xl border border-white/5 my-8">
+                    <i class="fas fa-search text-3xl text-slate-500 mb-3 block"></i>
+                    <h3 class="text-lg font-bold text-white mb-1">No articles found</h3>
+                    <p class="text-slate-400 text-xs mb-4">Try adjusting your search terms or clearing tag filters.</p>
+                    <button onclick="updateBlogState({searchQuery: '', selectedTag: 'ALL', currentPage: 1})" class="px-4 py-2 bg-amber-500 text-black font-bold text-xs rounded-lg hover:bg-amber-400 transition">
+                        Reset Filters
+                    </button>
+                </div>
+            `}
+
+            <!-- PAGINATION CONTROLS -->
+            ${totalPages > 1 ? `
+                <div class="flex flex-col sm:flex-row items-center justify-between border-t border-white/10 pt-6 gap-4">
+                    <p class="text-slate-400 text-xs">
+                        Showing <span class="text-white font-semibold">${startIndex + 1}</span> to <span class="text-white font-semibold">${Math.min(startIndex + blogPageState.itemsPerPage, filteredArticles.length)}</span> of <span class="text-white font-semibold">${filteredArticles.length}</span> articles
+                    </p>
+
+                    <div class="flex items-center gap-2">
+                        <!-- Previous Button -->
+                        <button 
+                            onclick="updateBlogState({currentPage: ${blogPageState.currentPage - 1}})"
+                            ${blogPageState.currentPage === 1 ? 'disabled class="px-3 py-1.5 rounded-lg bg-slate-900/50 border border-white/5 text-slate-600 cursor-not-allowed text-xs font-semibold"' : 'class="px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-slate-300 hover:text-white hover:border-amber-500/50 transition text-xs font-semibold"'}>
+                            <i class="fas fa-chevron-left mr-1"></i> Prev
+                        </button>
+
+                        <!-- Page Number Buttons -->
+                        ${Array.from({ length: totalPages }, (_, i) => i + 1).map(p => `
+                            <button 
+                                onclick="updateBlogState({currentPage: ${p}})"
+                                class="w-8 h-8 rounded-lg text-xs font-bold transition ${
+                                    blogPageState.currentPage === p 
+                                        ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' 
+                                        : 'bg-slate-900 text-slate-400 border border-white/10 hover:text-white hover:border-amber-500/40'
+                                }">
+                                ${p}
+                            </button>
+                        `).join('')}
+
+                        <!-- Next Button -->
+                        <button 
+                            onclick="updateBlogState({currentPage: ${blogPageState.currentPage + 1}})"
+                            ${blogPageState.currentPage === totalPages ? 'disabled class="px-3 py-1.5 rounded-lg bg-slate-900/50 border border-white/5 text-slate-600 cursor-not-allowed text-xs font-semibold"' : 'class="px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-slate-300 hover:text-white hover:border-amber-500/50 transition text-xs font-semibold"'}>
+                            Next <i class="fas fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            ` : ''}
+
         </div>
 
         ${renderFooter()}
     `;
+
+    // Attach Search Debounce Listener
+    const searchInput = document.getElementById('articleSearchInput');
+    if (searchInput) {
+        searchInput.focus();
+        // Move cursor to end of input text
+        searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+        
+        searchInput.addEventListener('input', (e) => {
+            updateBlogState({ searchQuery: e.target.value, currentPage: 1 }, false);
+        });
+    }
+}
+
+// HELPER FUNCTION TO UPDATE STATE AND RE-RENDER
+function updateBlogState(newState, reRenderImmediately = true) {
+    blogPageState = { ...blogPageState, ...newState };
+    if (reRenderImmediately) {
+        renderBlogList();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+        renderBlogList();
+    }
 }
 
 // INITIAL STARTUP
