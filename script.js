@@ -1,9 +1,10 @@
+// Network Canvas Animation Background
 const canvas = document.getElementById('networkCanvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
 let points = [];
 
-// Network Background Canvas Logic
 function initCanvas() {
+    if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     points = [];
@@ -18,6 +19,7 @@ function initCanvas() {
 }
 
 function animateBackground() {
+    if (!canvas || !ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#f59e0b";
     ctx.strokeStyle = "rgba(245, 158, 11, 0.1)";
@@ -35,85 +37,94 @@ function animateBackground() {
     });
     requestAnimationFrame(animateBackground);
 }
-initCanvas(); animateBackground();
+initCanvas(); 
+animateBackground();
+window.addEventListener('resize', initCanvas);
 
 const app = document.getElementById('app-root');
 let fetchedArticles = [];
 
-// ARTICLES PAGE STATE MANAGEMENT
-let blogPageState = {
-    searchQuery: '',
-    selectedTag: 'ALL',
+// Global State Object for Articles
+window.articleState = {
     currentPage: 1,
-    itemsPerPage: 9
+    itemsPerPage: 9, // 3 rows x 3 columns
+    searchQuery: "",
+    selectedTag: "all"
 };
 
+// Fetch Dev.to Articles with Fallback & Tag Parsing
 async function fetchDevToArticles() {
     if (fetchedArticles.length > 0) return fetchedArticles;
+
     try {
         const response = await fetch(`https://dev.to/api/articles?username=${portfolioData.devToUsername}&per_page=1000`);
-        if (!response.ok) throw new Error('Network error');
+        if (!response.ok) throw new Error('Dev.to response error');
         const data = await response.json();
-        
-        if (data && data.length > 0) {
+
+        if (Array.isArray(data) && data.length > 0) {
             fetchedArticles = data.map(article => {
-                // Ensure tags are always an array of lowercase strings
-                let articleTags = [];
+                let rawTags = [];
                 if (Array.isArray(article.tag_list) && article.tag_list.length > 0) {
-                    articleTags = article.tag_list;
-                } else if (typeof article.tags === 'string' && article.tags.length > 0) {
-                    articleTags = article.tags.split(',').map(t => t.trim());
+                    rawTags = article.tag_list;
+                } else if (typeof article.tags === 'string' && article.tags.trim().length > 0) {
+                    rawTags = article.tags.split(',').map(t => t.trim());
+                } else if (Array.isArray(article.tags)) {
+                    rawTags = article.tags;
                 } else {
-                    articleTags = ['php', 'laravel']; // Default fallback
+                    rawTags = ['php', 'laravel'];
                 }
 
                 return {
                     id: article.id,
                     date: new Date(article.published_at).toLocaleDateString('en-US', { day: '2-digit', month: 'SHORT', year: 'numeric' }).toUpperCase(),
-                    title: article.title,
-                    description: article.description,
-                    url: article.canonical_url || article.url,
-                    reading_time_minutes: article.reading_time_minutes,
-                    cover_image: article.cover_image || article.social_image,
-                    tags: articleTags.map(t => t.toLowerCase())
+                    title: article.title || "Untitled Article",
+                    description: article.description || "",
+                    url: article.canonical_url || article.url || "#",
+                    reading_time_minutes: article.reading_time_minutes || 3,
+                    cover_image: article.cover_image || article.social_image || null,
+                    tags: rawTags.map(t => t.toLowerCase().trim())
                 };
             });
             return fetchedArticles;
         }
     } catch (error) {
-        console.warn("Dev.to API offline, using static data:", error);
+        console.warn("Dev.to API offline. Using fallback blogs array:", error);
     }
 
-    // Fallback to static blogs array
-    fetchedArticles = portfolioData.blogs.map(b => ({
+    // Fallback using portfolioData.blogs
+    fetchedArticles = (portfolioData.blogs || []).map(b => ({
         ...b,
-        tags: (b.tags || []).map(t => t.toLowerCase())
+        tags: Array.isArray(b.tags) ? b.tags.map(t => t.toLowerCase().trim()) : ['php', 'laravel']
     }));
+
     return fetchedArticles;
 }
 
-function navigate(page) {
+// Navigation & Scroll Helpers
+window.navigate = function(page) {
+    if (!app) return;
     app.style.opacity = '0';
     setTimeout(async () => {
         if (page === 'home') await renderHome();
         else if (page === 'blog-list') {
-            // Reset page state on navigation
-            blogPageState = { searchQuery: '', selectedTag: 'ALL', currentPage: 1, itemsPerPage: 9 };
+            window.articleState.currentPage = 1;
+            window.articleState.searchQuery = "";
+            window.articleState.selectedTag = "all";
             await renderBlogList();
         }
         app.style.opacity = '1';
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 200);
-}
+};
 
-function scrollToSection(id) {
+window.scrollToSection = function(id) {
     const el = document.getElementById(id);
     if (el) {
         const yOffset = -100;
         const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: 'smooth' });
     } else { 
-        navigate('home'); 
+        window.navigate('home'); 
         setTimeout(() => {
             const target = document.getElementById(id);
             if (target) {
@@ -123,9 +134,9 @@ function scrollToSection(id) {
             }
         }, 300); 
     }
-}
+};
 
-// DYNAMIC FOOTER COMPONENT
+// Global Dynamic Footer Component
 function renderFooter() {
     const currentYear = new Date().getFullYear();
     return `
@@ -245,17 +256,17 @@ async function renderHome() {
             <!-- ARTICLES & ENDORSEMENTS -->
             <div class="grid lg:grid-cols-2 gap-8 mb-12">
                 
-                <!-- ARTICLES CARD -->
+                <!-- ARTICLES HOME CARD -->
                 <div class="glass-card flex flex-col justify-between h-[520px]">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-white">Latest <span class="gradient-text">Articles</span></h2>
-                        <span onclick="navigate('blog-list')" class="text-amber-500 hover:underline cursor-pointer font-bold text-xs uppercase tracking-wider">View All</span>
+                        <span onclick="window.navigate('blog-list')" class="text-amber-500 hover:underline cursor-pointer font-bold text-xs uppercase tracking-wider">View All</span>
                     </div>
                     <div class="scroll-container custom-scroll overflow-y-auto flex-1 pr-2">
                         <div class="space-y-4">
                             ${homeArticles.map(b => `
                                 <a href="${b.url}" target="_blank" class="p-5 bg-slate-900/60 rounded-xl border border-white/5 block cursor-pointer group hover:border-amber-500/40 transition">
-                                    <p class="text-[11px] text-amber-500 font-bold uppercase tracking-wider mb-1.5">${b.date} • ${b.reading_time_minutes || 3} min read</p>
+                                    <p class="text-[11px] text-amber-500 font-bold uppercase tracking-wider mb-1.5">${b.date} • ${b.reading_time_minutes} min read</p>
                                     <h4 class="text-lg font-bold text-slate-100 group-hover:text-amber-500 transition leading-snug">${b.title}</h4>
                                 </a>
                             `).join('')}
@@ -263,7 +274,7 @@ async function renderHome() {
                     </div>
                 </div>
 
-                <!-- TESTIMONIALS CARD WITH LINKEDIN VERIFICATION LINK -->
+                <!-- ENDORSEMENTS WITH LINKEDIN VERIFICATION -->
                 <div class="glass-card flex flex-col justify-between h-[520px]">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-white">Peer <span class="gradient-text">Endorsements</span></h2>
@@ -310,200 +321,201 @@ async function renderHome() {
     `;
 }
 
-// ADVANCED ARTICLES PAGE WITH DYNAMIC SEARCH, TAG FILTERING & PAGINATION
-async function renderBlogList() {
-    const allArticles = await fetchDevToArticles();
+// ARTICLES INTERACTIVE LOGIC
+function filterArticles() {
+    const query = window.articleState.searchQuery.toLowerCase().trim();
+    const selectedTag = window.articleState.selectedTag.toLowerCase();
 
-    // 1. Extract Unique Tags
-    const tagsSet = new Set(['ALL']);
-    allArticles.forEach(art => {
-        if (art.tags && Array.isArray(art.tags)) {
-            art.tags.forEach(tag => tagsSet.add(tag.toLowerCase()));
-        }
-    });
-    const uniqueTags = Array.from(tagsSet);
+    return fetchedArticles.filter(article => {
+        const matchesQuery = !query || 
+            article.title.toLowerCase().includes(query) || 
+            (article.description && article.description.toLowerCase().includes(query)) ||
+            (article.tags && article.tags.some(t => t.includes(query)));
 
-    // 2. Filter Articles by Search Query and Tag Selection
-    const filteredArticles = allArticles.filter(art => {
-        const matchesQuery = 
-            art.title.toLowerCase().includes(blogPageState.searchQuery.toLowerCase()) || 
-            (art.description && art.description.toLowerCase().includes(blogPageState.searchQuery.toLowerCase()));
-
-        const matchesTag = 
-            blogPageState.selectedTag === 'ALL' || 
-            (art.tags && art.tags.map(t => t.toLowerCase()).includes(blogPageState.selectedTag.toLowerCase()));
+        const matchesTag = selectedTag === "all" || 
+            (article.tags && article.tags.includes(selectedTag));
 
         return matchesQuery && matchesTag;
     });
+}
 
-    // 3. Paginate Filtered Articles (9 per page)
-    const totalPages = Math.ceil(filteredArticles.length / blogPageState.itemsPerPage) || 1;
-    
-    // Safety check for current page boundary
-    if (blogPageState.currentPage > totalPages) blogPageState.currentPage = totalPages;
+window.handleSearchInput = function(e) {
+    window.articleState.searchQuery = e.target.value;
+    window.articleState.currentPage = 1;
+    updateArticlesGridUI();
+};
 
-    const startIndex = (blogPageState.currentPage - 1) * blogPageState.itemsPerPage;
-    const paginatedArticles = filteredArticles.slice(startIndex, startIndex + blogPageState.itemsPerPage);
+window.handleTagSelect = function(tag) {
+    window.articleState.selectedTag = tag;
+    window.articleState.currentPage = 1;
+    updateArticlesGridUI();
+};
 
-    // 4. Render Main HTML Layout
-    app.innerHTML = `
-        <div class="max-w-6xl mx-auto px-6 min-h-[75vh]">
-            <!-- HEADER -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-                <div>
-                    <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2">Technical <span class="gradient-text">Writing</span></h1>
-                    <p class="text-slate-400 text-sm">Deep dives into Laravel, backend architecture, database optimizations, and system design.</p>
+window.handlePageChange = function(newPage) {
+    window.articleState.currentPage = newPage;
+    updateArticlesGridUI();
+    window.scrollTo({ top: 180, behavior: 'smooth' });
+};
+
+function updateArticlesGridUI() {
+    const filtered = filterArticles();
+    const totalPages = Math.ceil(filtered.length / window.articleState.itemsPerPage) || 1;
+
+    if (window.articleState.currentPage > totalPages) {
+        window.articleState.currentPage = totalPages;
+    }
+
+    const startIndex = (window.articleState.currentPage - 1) * window.articleState.itemsPerPage;
+    const paginatedArticles = filtered.slice(startIndex, startIndex + window.articleState.itemsPerPage);
+
+    // Render Grid Cards
+    const gridContainer = document.getElementById('articles-grid-container');
+    if (gridContainer) {
+        if (paginatedArticles.length === 0) {
+            gridContainer.innerHTML = `
+                <div class="col-span-full py-16 text-center glass-card">
+                    <i class="fas fa-search-minus text-4xl text-amber-500/60 mb-3"></i>
+                    <h3 class="text-xl font-bold text-white mb-1">No articles found</h3>
+                    <p class="text-slate-400 text-sm">Try tweaking your search term or selecting another tag filter.</p>
                 </div>
-                <span onclick="navigate('home')" class="text-amber-500 cursor-pointer font-bold uppercase tracking-wider text-xs hover:underline flex items-center gap-2 self-start md:self-auto">
-                    <i class="fas fa-arrow-left"></i> Back to Home
-                </span>
-            </div>
+            `;
+        } else {
+            gridContainer.innerHTML = paginatedArticles.map(b => `
+                <a href="${b.url}" target="_blank" class="glass-card flex flex-col justify-between cursor-pointer group hover:border-amber-500/50 transition h-full">
+                    <div>
+                        ${b.cover_image ? `<img src="${b.cover_image}" alt="Article Cover" class="w-full h-36 object-cover rounded-lg mb-4 border border-white/5">` : ''}
+                        <span class="text-amber-500 text-[11px] font-bold uppercase tracking-wider block mb-2">${b.date} • ${b.reading_time_minutes} min read</span>
+                        <h2 class="text-lg font-bold text-white mb-2 group-hover:text-amber-500 transition leading-snug">${b.title}</h2>
+                        ${b.description ? `<p class="text-slate-400 text-xs line-clamp-3 mb-4 leading-relaxed">${b.description}</p>` : ''}
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap gap-1.5 mb-4">
+                            ${b.tags.map(t => `<span class="bg-slate-900 text-slate-400 px-2 py-0.5 rounded text-[10px] font-mono border border-white/5">#${t}</span>`).join('')}
+                        </div>
+                        <div class="text-amber-500 text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 pt-2 border-t border-white/5">
+                            Read on Dev.to <i class="fas fa-external-link-alt text-[10px]"></i>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+        }
+    }
 
-            <!-- SEARCH AND TAG FILTER CONTROLS -->
-            <div class="space-y-5 mb-10">
-                <!-- Search Input -->
-                <div class="relative max-w-xl">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input 
-                        type="text" 
-                        id="articleSearchInput"
-                        placeholder="Search 100+ articles by topic, keyword, or title..." 
-                        value="${blogPageState.searchQuery}"
-                        class="w-full pl-11 pr-4 py-3 bg-slate-900/80 border border-white/10 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500/50 text-sm transition"
-                    />
-                    ${blogPageState.searchQuery ? `
-                        <button onclick="updateBlogState({searchQuery: '', currentPage: 1})" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    ` : ''}
-                </div>
+    // Update Highlighted Tag UI Status
+    const tagButtons = document.querySelectorAll('.tag-btn');
+    tagButtons.forEach(btn => {
+        const tagValue = btn.getAttribute('data-tag');
+        if (tagValue === window.articleState.selectedTag) {
+            btn.className = "tag-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-amber-500 text-black shadow-lg shadow-amber-500/20";
+        } else {
+            btn.className = "tag-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-slate-900/80 text-slate-400 hover:text-white border border-white/10";
+        }
+    });
 
-                <!-- Tag Cloud Buttons -->
-                <div class="flex flex-wrap gap-2 items-center">
-                    <span class="text-xs text-slate-400 font-bold uppercase tracking-wider mr-1">Filter Tag:</span>
-                    ${uniqueTags.map(tag => `
-                        <button 
-                            onclick="updateBlogState({selectedTag: '${tag}', currentPage: 1})" 
-                            class="px-3 py-1 rounded-lg text-xs font-semibold capitalize transition ${
-                                blogPageState.selectedTag.toLowerCase() === tag.toLowerCase() 
-                                    ? 'bg-amber-500 text-black font-bold shadow-lg shadow-amber-500/20' 
-                                    : 'bg-slate-900/80 text-slate-400 border border-white/10 hover:border-amber-500/40 hover:text-white'
-                            }">
-                            #${tag}
-                        </button>
-                    `).join('')}
-                </div>
-            </div>
+    // Render Pagination Bar
+    const paginationContainer = document.getElementById('articles-pagination');
+    if (paginationContainer) {
+        if (totalPages <= 1) {
+            paginationContainer.innerHTML = '';
+        } else {
+            let pageBtns = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const isActive = i === window.articleState.currentPage;
+                pageBtns += `
+                    <button onclick="window.handlePageChange(${i})" class="w-9 h-9 rounded-lg text-xs font-bold transition ${isActive ? 'bg-amber-500 text-black' : 'bg-slate-900 border border-white/10 text-slate-300 hover:border-amber-500/50'}">
+                        ${i}
+                    </button>
+                `;
+            }
 
-            <!-- ARTICLES GRID (3 ROWS x 3 COLS = 9 ITEMS) -->
-            ${paginatedArticles.length > 0 ? `
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                    ${paginatedArticles.map(b => `
-                        <a href="${b.url}" target="_blank" class="glass-card flex flex-col justify-between cursor-pointer group hover:border-amber-500/50 transition">
-                            <div>
-                                ${b.cover_image ? `<img src="${b.cover_image}" alt="Cover Image" class="w-full h-36 object-cover rounded-lg mb-4 border border-white/5">` : ''}
-                                
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-amber-500 text-[11px] font-bold uppercase tracking-wider">${b.date} • ${b.reading_time_minutes || 3} min</span>
-                                </div>
-
-                                <h2 class="text-lg font-bold text-white mb-2 group-hover:text-amber-500 transition leading-snug">${b.title}</h2>
-                                ${b.description ? `<p class="text-slate-400 text-xs line-clamp-3 mb-4 leading-relaxed">${b.description}</p>` : ''}
-                            </div>
-
-                            <div>
-                                <!-- Tags List -->
-                                <div class="flex flex-wrap gap-1.5 mb-4">
-                                    ${(b.tags || []).map(t => `
-                                        <span class="text-[10px] bg-slate-950/80 text-slate-400 border border-white/5 px-2 py-0.5 rounded">#${t}</span>
-                                    `).join('')}
-                                </div>
-
-                                <div class="text-amber-500 text-xs font-bold uppercase tracking-widest flex items-center gap-1.5 pt-2 border-t border-white/5">
-                                    Read Article <i class="fas fa-external-link-alt text-[10px]"></i>
-                                </div>
-                            </div>
-                        </a>
-                    `).join('')}
-                </div>
-            ` : `
-                <!-- EMPTY STATE -->
-                <div class="text-center py-16 bg-slate-900/40 rounded-2xl border border-white/5 my-8">
-                    <i class="fas fa-search text-3xl text-slate-500 mb-3 block"></i>
-                    <h3 class="text-lg font-bold text-white mb-1">No articles found</h3>
-                    <p class="text-slate-400 text-xs mb-4">Try adjusting your search terms or clearing tag filters.</p>
-                    <button onclick="updateBlogState({searchQuery: '', selectedTag: 'ALL', currentPage: 1})" class="px-4 py-2 bg-amber-500 text-black font-bold text-xs rounded-lg hover:bg-amber-400 transition">
-                        Reset Filters
+            paginationContainer.innerHTML = `
+                <div class="flex items-center justify-center gap-2 mt-12">
+                    <button onclick="window.handlePageChange(${window.articleState.currentPage - 1})" ${window.articleState.currentPage === 1 ? 'disabled' : ''} class="px-3.5 h-9 rounded-lg text-xs font-bold bg-slate-900 border border-white/10 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:border-amber-500/50 transition">
+                        <i class="fas fa-chevron-left mr-1"></i> Prev
+                    </button>
+                    ${pageBtns}
+                    <button onclick="window.handlePageChange(${window.articleState.currentPage + 1})" ${window.articleState.currentPage === totalPages ? 'disabled' : ''} class="px-3.5 h-9 rounded-lg text-xs font-bold bg-slate-900 border border-white/10 text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed hover:border-amber-500/50 transition">
+                        Next <i class="fas fa-chevron-right ml-1"></i>
                     </button>
                 </div>
-            `}
+            `;
+        }
+    }
+}
 
-            <!-- PAGINATION CONTROLS -->
-            ${totalPages > 1 ? `
-                <div class="flex flex-col sm:flex-row items-center justify-between border-t border-white/10 pt-6 gap-4">
-                    <p class="text-slate-400 text-xs">
-                        Showing <span class="text-white font-semibold">${startIndex + 1}</span> to <span class="text-white font-semibold">${Math.min(startIndex + blogPageState.itemsPerPage, filteredArticles.length)}</span> of <span class="text-white font-semibold">${filteredArticles.length}</span> articles
-                    </p>
+// FULL ARTICLES PAGE VIEW
+async function renderBlogList() {
+    const articles = await fetchDevToArticles();
 
-                    <div class="flex items-center gap-2">
-                        <!-- Previous Button -->
-                        <button 
-                            onclick="updateBlogState({currentPage: ${blogPageState.currentPage - 1}})"
-                            ${blogPageState.currentPage === 1 ? 'disabled class="px-3 py-1.5 rounded-lg bg-slate-900/50 border border-white/5 text-slate-600 cursor-not-allowed text-xs font-semibold"' : 'class="px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-slate-300 hover:text-white hover:border-amber-500/50 transition text-xs font-semibold"'}>
-                            <i class="fas fa-chevron-left mr-1"></i> Prev
-                        </button>
+    // Deduplicate and extract all article tags
+    const tagsSet = new Set();
+    articles.forEach(article => {
+        if (Array.isArray(article.tags)) {
+            article.tags.forEach(t => tagsSet.add(t.toLowerCase().trim()));
+        }
+    });
+    const uniqueTags = Array.from(tagsSet).sort();
 
-                        <!-- Page Number Buttons -->
-                        ${Array.from({ length: totalPages }, (_, i) => i + 1).map(p => `
-                            <button 
-                                onclick="updateBlogState({currentPage: ${p}})"
-                                class="w-8 h-8 rounded-lg text-xs font-bold transition ${
-                                    blogPageState.currentPage === p 
-                                        ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' 
-                                        : 'bg-slate-900 text-slate-400 border border-white/10 hover:text-white hover:border-amber-500/40'
-                                }">
-                                ${p}
-                            </button>
-                        `).join('')}
-
-                        <!-- Next Button -->
-                        <button 
-                            onclick="updateBlogState({currentPage: ${blogPageState.currentPage + 1}})"
-                            ${blogPageState.currentPage === totalPages ? 'disabled class="px-3 py-1.5 rounded-lg bg-slate-900/50 border border-white/5 text-slate-600 cursor-not-allowed text-xs font-semibold"' : 'class="px-3 py-1.5 rounded-lg bg-slate-900 border border-white/10 text-slate-300 hover:text-white hover:border-amber-500/50 transition text-xs font-semibold"'}>
-                            Next <i class="fas fa-chevron-right ml-1"></i>
-                        </button>
-                    </div>
+    app.innerHTML = `
+        <div class="max-w-6xl mx-auto px-6 min-h-[70vh]">
+            
+            <!-- HEADER & SEARCH BAR -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-2">Technical <span class="gradient-text">Writing</span></h1>
+                    <p class="text-slate-400 text-sm">Deep dives into Laravel core, architecture patterns, and system performance.</p>
                 </div>
-            ` : ''}
+
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <div class="relative w-full md:w-72">
+                        <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                        <input id="article-search-input" 
+                               type="text" 
+                               value="${window.articleState.searchQuery}"
+                               placeholder="Search 100+ articles..." 
+                               oninput="window.handleSearchInput(event)"
+                               class="w-full bg-slate-900/90 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500/60 transition">
+                    </div>
+
+                    <span onclick="window.navigate('home')" class="text-amber-500 cursor-pointer font-bold uppercase tracking-wider text-xs hover:underline flex items-center gap-2 shrink-0">
+                        <i class="fas fa-arrow-left"></i> Home
+                    </span>
+                </div>
+            </div>
+
+            <!-- DYNAMIC TAG FILTERS -->
+            <div class="mb-8 flex flex-wrap items-center gap-2">
+                <span class="text-xs text-slate-500 font-semibold mr-1">Filter Tag:</span>
+                
+                <button onclick="window.handleTagSelect('all')" 
+                        data-tag="all" 
+                        class="tag-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-amber-500 text-black shadow-lg shadow-amber-500/20">
+                    All
+                </button>
+
+                ${uniqueTags.map(tag => `
+                    <button onclick="window.handleTagSelect('${tag}')" 
+                            data-tag="${tag}" 
+                            class="tag-btn px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-slate-900/80 text-slate-400 hover:text-white border border-white/10">
+                        #${tag}
+                    </button>
+                `).join('')}
+            </div>
+
+            <!-- ARTICLES GRID (3 ROWS MAX = 9 ITEMS) -->
+            <div id="articles-grid-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+            <!-- PAGINATION -->
+            <div id="articles-pagination"></div>
 
         </div>
 
         ${renderFooter()}
     `;
 
-    // Attach Search Debounce Listener
-    const searchInput = document.getElementById('articleSearchInput');
-    if (searchInput) {
-        searchInput.focus();
-        // Move cursor to end of input text
-        searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
-        
-        searchInput.addEventListener('input', (e) => {
-            updateBlogState({ searchQuery: e.target.value, currentPage: 1 }, false);
-        });
-    }
-}
-
-// HELPER FUNCTION TO UPDATE STATE AND RE-RENDER
-function updateBlogState(newState, reRenderImmediately = true) {
-    blogPageState = { ...blogPageState, ...newState };
-    if (reRenderImmediately) {
-        renderBlogList();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-        renderBlogList();
-    }
+    // Initialize UI
+    updateArticlesGridUI();
 }
 
 // INITIAL STARTUP
-navigate('home');
+window.navigate('home');
