@@ -1,9 +1,10 @@
 const portfolioData = {
-    heading: "Turning Complex Ideas Into <br><span class='gradient-text'>Scalable Realities.</span>",
-    subheading: "I am a Senior Software Engineer specializing in high-performance backend architectures and seamless user experiences. I help businesses automate, scale, and lead their industries.",
+    heading: "Architecting High-Performance <br><span class='gradient-text'>Backend Systems.</span>",
+    subheading: "I am a Senior Software Engineer specializing in Laravel, cloud infrastructure, and database optimization. Actively building, continuous learning, and publishing technical deep-dives.",
     photoUrl: "anasHussain.jpg",
     resumeLink: "https://drive.google.com/file/d/1uboXIj9gRQkXungPYdAijCEF3bfHzJiR/view",
     email: "anashussain284@gmail.com",
+    devToUsername: "anashussain284", // Used for automated post fetching
     
     socials: [
         { icon: "fa-github", link: "https://github.com/anashussain284" },
@@ -23,22 +24,22 @@ const portfolioData = {
     solutions: [
         { 
             title: "Enterprise Web Systems", 
-            desc: "Beyond simple websites: I build robust, high-traffic web applications designed to automate your business workflows and drive revenue.", 
+            desc: "Architecting robust, maintainable, and high-throughput web applications with modern Laravel patterns.", 
             icon: "fa-layer-group" 
         },
         { 
             title: "Scalable API Architecture", 
-            desc: "Designing secure, high-speed API ecosystems (REST/JWT) that allow your platforms to communicate seamlessly with third-party services.", 
+            desc: "Designing secure, high-speed RESTful API ecosystems with granular authentication protocols.", 
             icon: "fa-network-wired" 
         },
         { 
             title: "Performance Engineering", 
-            desc: "I specialize in database optimization and caching strategies that reduce load times by up to 40%, ensuring your customers never wait.", 
+            desc: "Optimizing query execution, indexing, and Redis caching strategies for sub-second system response times.", 
             icon: "fa-bolt" 
         },
         { 
             title: "Cloud & DevOps", 
-            desc: "Deploying applications with Docker and AWS for 99.9% uptime, utilizing CI/CD pipelines for rapid, error-free releases.", 
+            desc: "Configuring containerized environments with Docker and AWS CI/CD pipelines for reliable deployment.", 
             icon: "fa-cloud" 
         }
     ],
@@ -103,24 +104,15 @@ const portfolioData = {
         }
     ],
 
+    // Fallback static data if network fails or Dev.to API is unreachable
     blogs: [
         { 
             id: 1, 
             date: "12 FEB 2026", 
-            title: "Minimalism in Code", 
-            subheading: "Why less is usually much more in modern software.",
-            image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085",
-            paragraphs: [
-                "Software development is often a battle against complexity. We spend more time reading code than writing it. Simple code is not just easier to maintain; it is cheaper to run and less prone to edge-case bugs.",
-                "By stripping away unnecessary abstractions, we create systems that are easier to maintain and faster to deploy. The goal is to reach a point where nothing else can be taken away."
-            ],
-            references: [{ label: "Clean Code Principles", url: "#" }]
-        },
-        { 
-            id: 2, 
-            date: "05 FEB 2026", 
-            title: "Why Next.js Wins", 
-            paragraphs: ["A short look into the power of Server Components."]
+            title: "How to Build More Flexible Systems.", 
+            reading_time_minutes: 3,
+            url: "https://dev.to/anashussain284/the-inheritance-trap-how-laravel-developers-can-build-more-flexible-systems-3nme",
+            description: "The Inheritance Trap: How Laravel Developers Can Build More Flexible Systems."
         }
     ]
 };
