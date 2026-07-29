@@ -275,6 +275,15 @@ const portfolioData = {
             url: "https://dev.to/anashussain284/kill-your-conditionals-mastering-polymorphism-in-php-laravel-2el0",
             description: "Replace cluttered `if/else` or `switch` statements with clean polymorphic behavior using interface-driven execution.",
             tags: ["php","design-pattern","object-design-fundamentals","oop"]
+        },
+        { 
+            id: 19, 
+            date: "29 Jul 2026", 
+            title: "The Art of Abstraction: Mastering Interfaces vs. Abstract Classes in PHP", 
+            reading_time_minutes: 13,
+            url: "https://dev.to/anashussain284/the-art-of-abstraction-when-to-use-interfaces-and-abstract-classes-hg7",
+            description: "A developer's guide to choosing between interfaces and abstract classes to design clean, decoupled, and extensible object hierarchies.",
+            tags: ["php","design-pattern","object-design-fundamentals","oop"]
         }
     ]
 };
