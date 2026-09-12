@@ -56,6 +56,13 @@ const portfolioData = {
     ],
 
     works: [
+        {
+            title: "Telecalling Analytics & Data Integration Platform",
+            brief: "A data-driven telecalling platform for CDR ingestion, analytics, reporting, filtering, and synchronization across multiple services.",
+            stacks: ["PHP", "Laravel", "JavaScript", "MySQL", "MongoDB", "REST APIs", "Webhooks", "Laravel Queues", "RabbitMQ", "Cron Jobs", "Grafana"],
+            challenge: "Migrating an existing Laravel application and legacy data-synchronization mechanism to a modern architecture while maintaining continuous service availability and reliable data flow.",
+            solution: "Designed an incremental migration approach with webhook-based CDR ingestion, separating mutable transactional data in MySQL from immutable records in MongoDB. Implemented queue-driven synchronization using Laravel Queues and RabbitMQ, scalable REST APIs, scheduled processing, and structured logging with Grafana-based filtering and monitoring."
+        },
         { 
             title: "Aakri App (Waste Management)", 
             brief: "A high-performance booking and real-time logistics ecosystem designed for sustainable waste collection operations.",
