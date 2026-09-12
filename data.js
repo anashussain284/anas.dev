@@ -1,6 +1,6 @@
 const portfolioData = {
-    heading: "Architecting High-Performance <br><span class='gradient-text'>Backend Systems.</span>",
-    subheading: "I am a Senior Software Engineer specializing in Laravel, cloud infrastructure, and database optimization. Actively building, continuous learning, and publishing technical deep-dives.",
+    heading: "Engineered for Scale. <br><span class='gradient-text'>Architected for Reliability.</span>",
+    subheading: "Senior Software Engineer with 7+ years of experience designing scalable backend architectures, high-throughput APIs, optimized database systems, and robust infrastructure.",
     photoUrl: "anasHussain.jpg",
     resumeLink: "https://drive.google.com/file/d/1uboXIj9gRQkXungPYdAijCEF3bfHzJiR/view",
     email: "anashussain284@gmail.com",
@@ -15,77 +15,88 @@ const portfolioData = {
     ],
 
     techStack: [
-        "PHP (Laravel/CodeIgniter)", "JavaScript (jQuery/Ajax)", "MySQL", "MongoDB", 
-        "Docker", "AWS (EC2/S3)", "Redis", "REST APIs", "JWT/Passport/Sanctum",
-        "CI/CD", "Git/GitHub/GitLab", "Linux/Shell/SSH", "Unit Testing (PHPUnit)",
-        "Tailwind CSS", "Bootstrap", "Agile/Scrum/Kanban"
+        "Backend Architecture",
+        "System Design (HLD/LLD)",
+        "Object-Oriented Design (OOP)",
+        "SOLID & Design Patterns",
+        "REST APIs",
+        "MySQL (Query Optimization & Indexing)",
+        "Redis Caching",
+        "Asynchronous Processing & Queues",
+        "Docker & Containerization",
+        "AWS Cloud Infrastructure",
+        "Linux Infrastructure",
+        "CI/CD Pipelines",
+        "Automated Testing (PHPUnit)",
+        "Git Version Control",
+        "Performance Engineering"
     ],
 
     solutions: [
-        { 
-            title: "Enterprise Web Systems", 
-            desc: "Architecting robust, maintainable, and high-throughput web applications with modern Laravel patterns.", 
-            icon: "fa-layer-group" 
+        {
+          "title": "Distributed Backend & System Architecture",
+          "desc": "Designing resilient, loosely coupled backend systems, utilizing High-Level and Low-Level Design (HLD/LLD) principles for maintainable growth.",
+          "icon": "fa-layer-group"
         },
-        { 
-            title: "Scalable API Architecture", 
-            desc: "Designing secure, high-speed RESTful API ecosystems with granular authentication protocols.", 
-            icon: "fa-network-wired" 
+        {
+          "title": "High-Throughput API Ecosystems",
+          "desc": "Building secure, low-latency RESTful APIs and microservice endpoints featuring robust authentication, rate limiting, and structured payloads.",
+          "icon": "fa-network-wired"
         },
-        { 
-            title: "Performance Engineering", 
-            desc: "Optimizing query execution, indexing, and Redis caching strategies for sub-second system response times.", 
-            icon: "fa-bolt" 
+        {
+          "title": "Database Engineering & Performance",
+          "desc": "Optimizing relational schema design, query execution plans, indexing strategies, and Redis caching layers for sub-second responses at scale.",
+          "icon": "fa-bolt"
         },
-        { 
-            title: "Cloud & DevOps", 
-            desc: "Configuring containerized environments with Docker and AWS CI/CD pipelines for reliable deployment.", 
-            icon: "fa-cloud" 
+        {
+          "title": "DevOps & Cloud Reliability",
+          "desc": "Containerizing environments with Docker, setting up automated CI/CD pipelines, and managing AWS cloud deployments with strong security practices.",
+          "icon": "fa-cloud"
         }
     ],
 
     works: [
         { 
             title: "Aakri App (Waste Management)", 
-            brief: "A high-performance booking and logistics ecosystem for sustainable waste management.", 
-            stacks: ["Laravel", "MySQL", "AWS", "WebSockets"],
-            challenge: "Managing concurrent transactions and real-time updates for thousands of active users.",
-            solution: "Architected a real-time notification system using WebSockets and optimized the database, resulting in a 40% increase in page speed."
+            brief: "A high-performance booking and real-time logistics ecosystem designed for sustainable waste collection operations.",
+            stacks: ["Laravel", "MySQL", "AWS", "WebSockets", "Backend Queues"],
+            challenge: "Handling concurrent real-time transactions and high-frequency live updates without introducing database locks or API latency.",
+            solution: "Architected an event-driven notification architecture leveraging WebSockets and decoupled background processing, resulting in a 40% performance gain."
         },
         { 
-            title: "iAlignEd (LMS)", 
-            brief: "A secure e-learning platform managing complex data exchange between students and educators.", 
+            title: "iAlignEd (LMS)",
+            brief: "A secure e-learning platform handling complex, multi-role data exchange between students, instructors, and administrators.", 
             stacks: ["Laravel", "Redis", "JWT", "Swagger"],
-            challenge: "Ensuring iron-clad security for sensitive educational data while maintaining high query performance.",
-            solution: "Implemented JWT-based authentication and optimized indexing for large datasets to maintain sub-second response times."
+            challenge: "Ensuring ironclad data protection for sensitive educational payloads while maintaining rapid search and query execution times.",
+            solution: "Implemented fine-grained JWT authentication protocols and engineered composite indexing over large educational datasets to preserve sub-second responses."
         },
         { 
             title: "BioticsLab CRM", 
-            brief: "Custom CRM solution built to streamline team collaboration and client lifecycle management.", 
-            stacks: ["Laravel", "Ajax", "Passport", "jQuery"],
-            challenge: "Automating complex financial document generation and multi-tier access control.",
-            solution: "Developed a dynamic automated invoicing module and integrated Laravel Passport for enterprise-grade Role-Based Access Control (RBAC)."
+            brief: "Custom enterprise CRM system engineered to automate document generation, client lifecycle tracking, and internal team workflows.", 
+            stacks: ["Laravel", "REST APIs", "OAuth2/Passport", "Role-Based Access Control"],
+            challenge: "Automating multi-tier financial document compilation alongside granular access control across hierarchical user roles.",
+            solution: "Designed a dynamic document execution engine and implemented enterprise-grade Role-Based Access Control (RBAC) to enforce isolated data boundaries."
         },
         { 
-            title: "QTC Airdrop", 
-            brief: "A blockchain-integrated platform for secure cryptocurrency distribution.", 
-            stacks: ["Laravel", "TronLink", "Google FCM"],
-            challenge: "Seamlessly bridging traditional web architecture with blockchain transaction layers.",
-            solution: "Successfully integrated TronLink for transparent, secure blockchain verification and real-time transaction tracking."
+            title: "QTC Airdrop (Blockchain Integration Gateway)", 
+            brief: "A distribution network bridging traditional web backend infrastructure with blockchain verification networks.", 
+            stacks: ["Laravel", "TronLink", "Google FCM", "Asynchronous Processing"],
+            challenge: "Seamlessly syncing off-chain backend operations with distributed, non-deterministic on-chain transaction updates.",
+            solution: "Engineered a state-reconciliation background processing service to handle transaction tracking asynchronously with real-time push notifications."
         },
         { 
-            title: "Mind Max", 
-            brief: "Educational platform featuring a dynamic analytical dashboard for student performance metrics.", 
-            stacks: ["Laravel", "Canvas.js", "MySQL", "Ajax"],
-            challenge: "Processing and visualizing massive amounts of student data in real-time.",
-            solution: "Engineered a custom analytics engine using Canvas.js for interactive, high-speed data visualization."
+            title: "Mind Max Analytical Engine", 
+            brief: "Educational performance analytics engine calculating dynamic learning metrics for large student populations.", 
+            stacks: ["Laravel", "Canvas.js", "MySQL", "Interactive Analytics"],
+            challenge: "Processing, aggregating, and visualizing raw historical performance metrics without bottlenecking primary database reads.",
+            solution: "Structured targeted aggregate view tables and optimized analytical SQL queries to render high-speed visual analytics dashboards."
         },
         { 
             title: "AlignERP Solutions", 
-            brief: "Corporate digital presence focusing on client acquisition and automated communication.", 
-            stacks: ["PHP", "JavaScript", "Bootstrap"],
-            challenge: "Building a reliable, high-deliverability client communication gateway.",
-            solution: "Developed a custom SMTP-based mailer system to ensure 100% communication reliability between clients and the sales team."
+            brief: "High-deliverability transaction and communication gateway built for enterprise client lead processing.", 
+            stacks: ["PHP", "JavaScript", "Bootstrap", "SMTP Protocols", "Reliability Engineering"],
+            challenge: "Eliminating email deliverability drops and transaction loss during high-volume outgoing communication requests.",
+            solution: "Engineered a dedicated outbound SMTP queuing system featuring automatic retries and failover handlers to ensure reliable message delivery."
         }
     ],
 
