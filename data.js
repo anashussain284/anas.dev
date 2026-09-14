@@ -311,6 +311,15 @@ const portfolioData = {
             url: "https://dev.to/anashussain284/7-high-cohesion-low-coupling-the-foundation-of-good-object-design-2c35",
             description: "Master the twin pillars of clean software design to build flexible, modular PHP applications that are easy to test and scale.",
             tags: ["php","design-pattern","object-design-fundamentals","oop"]
+        },
+        { 
+            id: 21, 
+            date: "14 Sep 2026", 
+            title: "Stop Writing Massive if-else Blocks: Master the Strategy Pattern in PHP & Laravel", 
+            reading_time_minutes: 17,
+            url: "https://dev.to/anashussain284/8-stop-writing-massive-if-else-blocks-master-the-strategy-pattern-in-php-laravel-43lp",
+            description: "Learn how the Strategy Pattern replaces growing if-else blocks with clean, flexible, and maintainable PHP and Laravel designs.",
+            tags: ["php","design-pattern","object-design-fundamentals","oop"]
         }
     ]
 };
