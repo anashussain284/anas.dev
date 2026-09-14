@@ -11,7 +11,7 @@ const portfolioData = {
         { icon: "fa-linkedin", link: "https://www.linkedin.com/in/anashussain284/" },
         { icon: "fab fa-stack-overflow", link: "https://stackoverflow.com/users/14830068/anas-hussain-m" },
         { icon: "fa-dev", link: "https://dev.to/anashussain284" },
-        { icon: "fas fa-code", link: "https://leetcode.com/u/anashussain284/" }
+        // { icon: "fas fa-code", link: "https://leetcode.com/u/anashussain284/" }
     ],
 
     techStack: [
