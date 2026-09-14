@@ -2,7 +2,7 @@ const portfolioData = {
     heading: "Engineered for Scale. <br><span class='gradient-text'>Architected for Reliability.</span>",
     subheading: "Senior Software Engineer with 7+ years of experience designing scalable backend architectures, high-throughput APIs, optimized database systems, and robust infrastructure.",
     photoUrl: "anasHussain.jpg",
-    resumeLink: "https://drive.google.com/file/d/1uboXIj9gRQkXungPYdAijCEF3bfHzJiR/view",
+    resumeLink: "https://drive.google.com/file/d/1zSfpepMs7m_eELaFyA7-xtN_u0hyK75n/view?usp=sharing",
     email: "anashussain284@gmail.com",
     devToUsername: "anashussain284",
     
