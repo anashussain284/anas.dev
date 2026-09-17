@@ -313,13 +313,22 @@ const portfolioData = {
             tags: ["php","design-pattern","object-design-fundamentals","oop"]
         },
         { 
-            id: 21, 
+            id: 21,
             date: "14 Sep 2026", 
             title: "Stop Writing Massive if-else Blocks: Master the Strategy Pattern in PHP & Laravel", 
             reading_time_minutes: 17,
             url: "https://dev.to/anashussain284/8-stop-writing-massive-if-else-blocks-master-the-strategy-pattern-in-php-laravel-43lp",
             description: "Learn how the Strategy Pattern replaces growing if-else blocks with clean, flexible, and maintainable PHP and Laravel designs.",
-            tags: ["php","design-pattern","object-design-fundamentals","oop"]
+            tags: ["php","design-pattern","object-design-foundation","oop"]
+        },
+        {
+            id: 22,
+            date: "17 Sep 2026", 
+            title: "Tired of 'new' Everywhere? Learn Factory Method with Laravel", 
+            reading_time_minutes: 15,
+            url: "https://dev.to/anashussain284/tired-of-new-everywhere-learn-factory-method-with-laravel-3j34",
+            description: "Replace rigid object creation with the Factory Method pattern to write cleaner, decoupled, and highly extensible Laravel code.",
+            tags: ["php","design-pattern","object-design-foundation","oop"]
         }
     ]
 };
