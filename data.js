@@ -2,7 +2,7 @@ const portfolioData = {
     heading: "Engineered for Scale. <br><span class='gradient-text'>Architected for Reliability.</span>",
     subheading: "Senior Software Engineer with 7+ years of experience designing scalable backend architectures, high-throughput APIs, optimized database systems, and robust infrastructure.",
     photoUrl: "anasHussain.jpg",
-    resumeLink: "https://drive.google.com/file/d/1zSfpepMs7m_eELaFyA7-xtN_u0hyK75n/view?usp=sharing",
+    resumeLink: "https://drive.google.com/file/d/1pMZImOD1UfHlscVkYuFtNsOQdzHUP6l9/view?usp=sharing",
     email: "anashussain284@gmail.com",
     devToUsername: "anashussain284",
     
@@ -328,6 +328,15 @@ const portfolioData = {
             reading_time_minutes: 15,
             url: "https://dev.to/anashussain284/tired-of-new-everywhere-learn-factory-method-with-laravel-3j34",
             description: "Replace rigid object creation with the Factory Method pattern to write cleaner, decoupled, and highly extensible Laravel code.",
+            tags: ["php","design-pattern","object-design-foundation","oop"]
+        },
+        {
+            id: 23,
+            date: "20 Sep 2026", 
+            title: "The Builder Pattern: Stop Writing 10-Parameter Constructors", 
+            reading_time_minutes: 16,
+            url: "https://dev.to/anashussain284/10-the-builder-pattern-stop-writing-10-parameter-constructors-2mhk",
+            description: "Master the Builder Pattern in PHP to construct complex objects step-by-step while eliminating bloated class constructors.",
             tags: ["php","design-pattern","object-design-foundation","oop"]
         }
     ]
