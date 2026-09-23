@@ -338,6 +338,15 @@ const portfolioData = {
             url: "https://dev.to/anashussain284/10-the-builder-pattern-stop-writing-10-parameter-constructors-2mhk",
             description: "Master the Builder Pattern in PHP to construct complex objects step-by-step while eliminating bloated class constructors.",
             tags: ["php","design-pattern","object-design-foundation","oop"]
+        },
+        {
+            id: 24,
+            date: "23 Sep 2026", 
+            title: "The Adapter Pattern: A Laravel Developer's Guide to API Integration", 
+            reading_time_minutes: 14,
+            url: "https://dev.to/anashussain284/the-adapter-pattern-a-laravel-developers-guide-to-api-integration-4o64",
+            description: "Learn how to use the Adapter Pattern in Laravel to decouple third-party API integrations and write flexible backend code.",
+            tags: ["php","design-pattern","object-design-foundation","oop"]
         }
     ]
 };
