@@ -347,6 +347,15 @@ const portfolioData = {
             url: "https://dev.to/anashussain284/the-adapter-pattern-a-laravel-developers-guide-to-api-integration-4o64",
             description: "Learn how to use the Adapter Pattern in Laravel to decouple third-party API integrations and write flexible backend code.",
             tags: ["php","design-pattern","object-design-foundation","oop"]
+        },
+        {
+            id: 25,
+            date: "26 Sep 2026", 
+            title: "Laravel Facades Explained: Why They Feel So Clean and Powerful", 
+            reading_time_minutes: 17,
+            url: "https://dev.to/anashussain284/laravel-facades-explained-why-they-feel-so-clean-and-powerful-1ldj",
+            description: "Uncover how Laravel Facades provide clean static interfaces to container services without sacrificing testability or scale.",
+            tags: ["php","design-pattern","object-design-foundation","oop"]
         }
     ]
 };
